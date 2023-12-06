@@ -1,0 +1,62 @@
+{
+  "name": "@vcmap/flight",
+  "version": "1.0.0",
+  "description": "VC Map plugin for creating camera flights in the map.",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "prepublishOnly": "vcmplugin build",
+    "build": "vcmplugin build",
+    "bundle": "vcmplugin bundle",
+    "start": "vcmplugin serve",
+    "preview": "vcmplugin preview",
+    "buildStagingApp": "vcmplugin buildStagingApp",
+    "lint:js": "eslint . --ext .vue,.js,.cjs,.mjs,.ts,.cts,.mts",
+    "lint:prettier": "prettier --check .",
+    "lint": "npm run lint:js && npm run lint:prettier",
+    "format": "prettier --write --list-different . && npm run lint:js -- --fix",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "author": "Roland Ruhdorfer <rruhdorfer@vc.systems>",
+  "license": "MIT",
+  "keywords": [
+    "vcmap",
+    "plugin"
+  ],
+  "files": [
+    "src/",
+    "dist/",
+    "plugin-assets/",
+    "LICENSE.md",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "exports": {
+    ".": "./src/index.js",
+    "./dist": "./dist/index.js"
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "dist",
+    "plugin-assets"
+  ],
+  "eslintConfig": {
+    "root": true,
+    "extends": "@vcsuite/eslint-config/vue"
+  },
+  "prettier": "@vcsuite/eslint-config/prettier.js",
+  "peerDependencies": {
+    "@vcmap/ui": "^5.0.2"
+  },
+  "devDependencies": {
+    "@vcmap/plugin-cli": "^2.1.17",
+    "@vcsuite/eslint-config": "^3.0.6",
+    "@vitest/coverage-v8": "^1.0.1",
+    "jest-canvas-mock": "^2.5.2",
+    "jsdom": "^23.0.1",
+    "resize-observer-polyfill": "^1.5.1",
+    "vitest": "^1.0.1"
+  },
+  "mapVersion": "^5.0"
+}
