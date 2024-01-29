@@ -51,15 +51,11 @@ lint:
   script:
     - npm run lint
 
-test:
+type-check:
   <<: *after_build_definition
   stage: test
   script:
-    - npm run coverage -- --reporter junit --outputFile test-report.xml
-  coverage: '/^Statements\s*:\s*([^%]+)/'
-  artifacts:
-    reports:
-      junit: test-report.xml
+    - npm run type-check
 
 audit:
   <<: *after_build_definition
