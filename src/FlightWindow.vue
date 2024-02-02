@@ -8,8 +8,8 @@
     />
     <div class="d-flex w-full justify-space-between px-2 pt-2 pb-1">
       <VcsFormButton
-        icon="$vcsComponents"
-        :disabled="currentIsPersisted"
+        icon="$vcsComponentsPlus"
+        :disabled="currentIsPersisted || !isValid"
         @click="addToMyWorkspace"
       />
       <VcsFormButton variant="filled" @click="newFlight">
@@ -29,6 +29,10 @@
     nextTick,
     defineComponent,
     PropType,
+    ShallowRef,
+    Ref,
+    onUnmounted,
+    watch,
   } from 'vue';
   import {
     VcsFlightComponent,
@@ -39,6 +43,22 @@
   import { FlightInstance, moduleIdSymbol } from '@vcmap/core';
   import { name } from '../package.json';
   import type { FlightPlugin } from './index.js';
+
+  function setupListener(
+    instance: ShallowRef<FlightInstance>,
+    isValid: Ref<boolean>,
+  ): () => void {
+    isValid.value = instance.value.isValid();
+    const listener = [
+      instance.value.propertyChanged.addEventListener(() => {
+        isValid.value = instance.value.isValid();
+      }),
+      instance.value.anchorsChanged.addEventListener(() => {
+        isValid.value = instance.value.isValid();
+      }),
+    ];
+    return () => listener.forEach((cb) => cb());
+  }
 
   export default defineComponent({
     name: 'FlightWindow',
@@ -65,19 +85,35 @@
       const currentIsPersisted = ref(
         app.flights.hasKey(props.flightInstanceName),
       );
+      const isValid = ref(false);
       const flightInstance = shallowRef();
       if (currentIsPersisted.value) {
-        flightInstance.value = app.flights.getByKey(props.flightInstanceName);
+        flightInstance.value = app.flights.getByKey(props.flightInstanceName)!;
         if (flightInstance.value.properties?.title) {
-          windowState.headerTitle = flightInstance.value.properties.title;
+          windowState.headerTitle = flightInstance.value.properties
+            .title as string;
         }
       } else {
         flightInstance.value = new FlightInstance({});
       }
+
       provide('flightInstance', flightInstance);
+
+      let destroy = setupListener(flightInstance, isValid);
+
+      const stopWatching = watch(flightInstance, () => {
+        destroy();
+        destroy = setupListener(flightInstance, isValid);
+      });
+
+      onUnmounted(() => {
+        destroy();
+        stopWatching();
+      });
 
       return {
         currentIsPersisted,
+        isValid,
         hasFlightInstance,
         parentId: windowState.id,
         addToMyWorkspace(): void {
