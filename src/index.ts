@@ -2,6 +2,7 @@ import {
   CollectionComponentClass,
   createListExportAction,
   createListImportAction,
+  createSupportedMapMappingFunction,
   EditorCollectionComponentClass,
   makeEditorCollectionComponentClass,
   ToolboxType,
@@ -11,7 +12,7 @@ import {
   WindowComponentOptions,
   WindowSlot,
 } from '@vcmap/ui';
-import type { Ctor, FlightInstance } from '@vcmap/core';
+import { type Ctor, type FlightInstance, CesiumMap } from '@vcmap/core';
 import { name, version, mapVersion } from '../package.json';
 import FlightCategory from './FlightCategory.js';
 import {
@@ -127,7 +128,7 @@ async function setupFlightEditorCollectionComponent(app: VcsUiApp): Promise<{
       },
     );
 
-  const editorCollecitonComponent = makeEditorCollectionComponentClass(
+  const editorCollectionComponent = makeEditorCollectionComponentClass(
     app,
     collectionComponent,
     {
@@ -145,6 +146,14 @@ async function setupFlightEditorCollectionComponent(app: VcsUiApp): Promise<{
     },
     'category-manager',
   );
+
+  editorCollectionComponent.addItemMapping({
+    mappingFunction: createSupportedMapMappingFunction(
+      [CesiumMap.className],
+      app.maps,
+    ),
+    owner: name,
+  });
 
   const { action: exportAction, destroy: exportDestroy } =
     createListExportAction(
@@ -221,7 +230,7 @@ async function setupFlightEditorCollectionComponent(app: VcsUiApp): Promise<{
   destroyFunctions.push(setupFlightButton(app, collectionComponent));
 
   return {
-    collectionComponent: editorCollecitonComponent,
+    collectionComponent: editorCollectionComponent,
     destroy(): void {
       destroyFunctions.forEach((cb) => cb());
     },
