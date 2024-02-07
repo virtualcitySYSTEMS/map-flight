@@ -3,7 +3,7 @@
   "version": "1.0.2",
   "description": "VC Map plugin for creating camera flights in the map.",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "prepublishOnly": "vcmplugin build",
     "build": "vcmplugin build",
@@ -34,7 +34,7 @@
     "CHANGELOG.md"
   ],
   "exports": {
-    ".": "./src/index.js",
+    ".": "./dist/index.js",
     "./dist": "./dist/index.js"
   },
   "eslintIgnore": [
@@ -44,17 +44,13 @@
   ],
   "prettier": "@vcsuite/eslint-config/prettier.js",
   "peerDependencies": {
-    "@vcmap/core": "5.1.0-rc.2",
-    "@vcmap/ui": "5.1.0-rc.2",
+    "@vcmap/core": "^5.1.0",
+    "@vcmap/ui": "^5.1.0",
     "vue": "~2.7.3",
     "vuetify": "~2.6.7"
   },
-  "overrides": {
-    "@vcmap/core": "5.1.0-rc.2",
-    "@vcmap/ui": "5.1.0-rc.2"
-  },
   "devDependencies": {
-    "@vcmap/plugin-cli": "^2.1.17",
+    "@vcmap/plugin-cli": "^3.0.0",
     "@vcsuite/eslint-config": "^3.0.6",
     "@vitest/coverage-v8": "^1.0.1",
     "jest-canvas-mock": "^2.5.2",
