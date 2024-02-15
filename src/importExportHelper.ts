@@ -1,4 +1,5 @@
 import {
+  defaultDynamicModuleId,
   exportFlightAsGeoJson,
   exportFlightPathAsGeoJson,
   FlightInstance,
@@ -36,5 +37,5 @@ export async function importFlights(
     }),
   );
 
-  await app.flights.parseItems(flightOptions, app.dynamicModuleId);
+  await app.flights.parseItems(flightOptions, defaultDynamicModuleId);
 }

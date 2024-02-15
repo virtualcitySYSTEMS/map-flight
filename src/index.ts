@@ -50,6 +50,7 @@ function setupFlightButton(
     title: 'flight.title',
     icon: '$vcsViewpointFlight',
     active: app.windowManager.has(windowComponent.id!),
+    disabled: !(app.maps.activeMap instanceof CesiumMap),
     callback(): void {
       if (this.active) {
         app.windowManager.remove(windowComponent.id!);
@@ -78,6 +79,16 @@ function setupFlightButton(
     app.windowManager.removed.addEventListener(({ id }) => {
       if (id === windowComponent.id) {
         action.active = false;
+      }
+    }),
+    app.maps.mapActivated.addEventListener((map) => {
+      if (!(map instanceof CesiumMap)) {
+        if (app.windowManager.has(windowComponent.id!)) {
+          app.windowManager.remove(windowComponent.id!);
+        }
+        action.disabled = true;
+      } else {
+        action.disabled = false;
       }
     }),
   ];
