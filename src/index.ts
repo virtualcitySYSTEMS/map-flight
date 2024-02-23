@@ -194,7 +194,7 @@ async function setupFlightEditorCollectionComponent(app: VcsUiApp): Promise<{
 
   const { action: importAction, destroy: importDestroy } =
     createListImportAction(
-      (files) => importFlights(app, files),
+      (files): Promise<boolean> => importFlights(app, files),
       app.windowManager,
       name,
       'category-manager',

@@ -1,5 +1,9 @@
 # v1.0.4
 
+- Add upload feedback
+
+# v1.0.4
+
 - Fix adding flights always to the defaultDynamicModuleId
 - Disabling tool for 2D and Oblique Map
 
