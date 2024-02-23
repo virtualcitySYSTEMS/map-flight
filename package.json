@@ -1,6 +1,6 @@
 {
   "name": "@vcmap/flight",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "VC Map plugin for creating camera flights in the map.",
   "type": "module",
   "main": "dist/index.js",
