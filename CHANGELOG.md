@@ -1,3 +1,7 @@
+# v1.1.0
+
+- Moved flight import, export, zoom and player actions to @vcmap/ui
+
 # v1.0.4
 
 - Add upload feedback

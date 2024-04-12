@@ -23,6 +23,7 @@ build:
   <<: *job_definition
   script:
     - npm ci
+    - npx vcmplugin ensure-types
   before_script:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh

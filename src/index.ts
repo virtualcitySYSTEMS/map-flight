@@ -1,7 +1,8 @@
 import {
   CollectionComponentClass,
-  createListExportAction,
-  createListImportAction,
+  createZoomToFlightAction,
+  createExportFlightAction,
+  setupFlightListItemPlayer,
   createSupportedMapMappingFunction,
   EditorCollectionComponentClass,
   makeEditorCollectionComponentClass,
@@ -11,15 +12,17 @@ import {
   VcsUiApp,
   WindowComponentOptions,
   WindowSlot,
+  importFlights,
+  createListImportAction,
 } from '@vcmap/ui';
-import { type Ctor, type FlightInstance, CesiumMap } from '@vcmap/core';
+import {
+  type Ctor,
+  type FlightInstance,
+  CesiumMap,
+  defaultDynamicModuleId,
+} from '@vcmap/core';
 import { name, version, mapVersion } from '../package.json';
 import FlightCategory from './FlightCategory.js';
-import {
-  createZoomToFlightAction,
-  setupFlightListItemPlayer,
-} from './flightPluginActions.js';
-import { exportFlights, importFlights } from './importExportHelper.js';
 import FlightWindow from './FlightWindow.vue';
 
 function getFlightEditorWindowId(
@@ -166,59 +169,39 @@ async function setupFlightEditorCollectionComponent(app: VcsUiApp): Promise<{
     owner: name,
   });
 
-  const { action: exportAction, destroy: exportDestroy } =
-    createListExportAction(
-      collectionComponent.selection,
-      () =>
-        exportFlights(
-          collectionComponent.selection.value
-            .map((l) => collectionComponent.collection.getByKey(l.name))
-            .filter((f): f is FlightInstance => !!f),
-        ),
-      name,
-    );
-
-  const { action: exportPathAction, destroy: exportPathDestroy } =
-    createListExportAction(
-      collectionComponent.selection,
-      () =>
-        exportFlights(
-          collectionComponent.selection.value
-            .map((l) => collectionComponent.collection.getByKey(l.name))
-            .filter((f): f is FlightInstance => !!f),
-          true,
-        ),
-      name,
-    );
-  exportPathAction.action.name = 'flight.exportPath';
-
   const { action: importAction, destroy: importDestroy } =
     createListImportAction(
-      (files): Promise<boolean> => importFlights(app, files),
+      (files) => importFlights(app, files, defaultDynamicModuleId),
       app.windowManager,
       name,
       'category-manager',
     );
 
-  destroyFunctions.push(exportDestroy, exportPathDestroy, importDestroy);
-  collectionComponent.addActions([
-    exportAction,
-    exportPathAction,
-    importAction,
-  ]);
+  destroyFunctions.push(importDestroy);
+  collectionComponent.addActions([importAction]);
 
   app.categoryManager.addMappingFunction<FlightInstance>(
     () => true,
     (item, _c, listItem) => {
       const { action: zoomAction, destroy: zoomDestroy } =
         createZoomToFlightAction(app, item);
-      listItem.actions.push(zoomAction);
+      const { action: exportAction, destroy: exportDestroy } =
+        createExportFlightAction(item);
+      const { action: exportPathAction, destroy: exportPathDestroy } =
+        createExportFlightAction(item, true);
+      listItem.actions.push(zoomAction, exportAction, exportPathAction);
       const destroyPlayer = setupFlightListItemPlayer(
         app,
         item,
         listItem.actions,
       );
-      listItem.destroyFunctions.push(zoomDestroy, destroyPlayer);
+
+      listItem.destroyFunctions.push(
+        zoomDestroy,
+        exportDestroy,
+        exportPathDestroy,
+        destroyPlayer,
+      );
       const { titleChanged } = listItem;
       listItem.titleChanged = (title): void => {
         titleChanged?.(title);
@@ -305,8 +288,6 @@ export default function flightPlugin(): FlightPlugin {
           title: 'Kameraflüge',
           titleTemporary: 'Temporärer Kameraflug',
           new: 'Neu',
-          zoom: 'Auf Ausdehnung zoomen',
-          exportPath: 'Flugpfad(e) exportieren',
         },
       },
       en: {
@@ -314,8 +295,6 @@ export default function flightPlugin(): FlightPlugin {
           title: 'Camera flights',
           titleTemporary: 'Temporary camera flight',
           new: 'New',
-          zoom: 'Zoom to extent',
-          exportPath: 'Export flight path(s)',
         },
       },
     },
