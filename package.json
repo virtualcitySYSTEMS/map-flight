@@ -1,6 +1,6 @@
 {
   "name": "@vcmap/flight",
-  "version": "1.1.0",
+  "version": "1.1.0-rc.0",
   "description": "VC Map plugin for creating camera flights in the map.",
   "type": "module",
   "main": "dist/index.js",
@@ -44,13 +44,10 @@
   ],
   "prettier": "@vcsuite/eslint-config/prettier.js",
   "peerDependencies": {
-    "@vcmap/core": "^5.1.6",
-    "@vcmap/ui": "github:virtualcitySYSTEMS/map-ui#main",
+    "@vcmap/core": "^5.2.0",
+    "@vcmap/ui": "5.2.0",
     "vue": "~2.7.3",
     "vuetify": "~2.6.7"
-  },
-  "overrides": {
-    "@vcmap/ui": "github:virtualcitySYSTEMS/map-ui#main"
   },
   "devDependencies": {
     "@vcmap/plugin-cli": "^3.0.3",
