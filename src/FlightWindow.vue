@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-  import { VSheet } from 'vuetify/lib';
+  import { VSheet } from 'vuetify/components';
   import {
     provide,
     inject,
@@ -126,12 +126,12 @@
             title,
           };
           app.flights.add(flightInstance.value);
-          plugin.selectFlight(flightInstance.value);
+          plugin?.selectFlight(flightInstance.value);
           currentIsPersisted.value = true;
           windowState.headerTitle = title;
         },
         async newFlight(): Promise<void> {
-          plugin.clearSelection();
+          plugin?.clearSelection();
           // close child window
           const childWindowIds = app.windowManager.componentIds.filter((id) =>
             id.includes('edit-anchor'),

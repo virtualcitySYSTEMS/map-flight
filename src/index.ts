@@ -16,11 +16,11 @@ import {
   createListImportAction,
 } from '@vcmap/ui';
 import {
-  type Ctor,
   type FlightInstance,
   CesiumMap,
   defaultDynamicModuleId,
 } from '@vcmap/core';
+import { reactive } from 'vue';
 import { name, version, mapVersion } from '../package.json';
 import FlightCategory from './FlightCategory.js';
 import FlightWindow from './FlightWindow.vue';
@@ -48,14 +48,14 @@ function setupFlightButton(
     props: {},
   };
 
-  const action: VcsAction = {
+  const action = reactive<VcsAction>({
     name: 'flight-plugin-action',
     title: 'flight.title',
     icon: '$vcsViewpointFlight',
     active: app.windowManager.has(windowComponent.id!),
     disabled: !(app.maps.activeMap instanceof CesiumMap),
     callback(): void {
-      if (this.active) {
+      if (action.active) {
         app.windowManager.remove(windowComponent.id!);
       } else {
         windowComponent.props = {};
@@ -71,7 +71,7 @@ function setupFlightButton(
         app.windowManager.add(windowComponent, name);
       }
     },
-  };
+  });
 
   const listeners = [
     app.windowManager.added.addEventListener(({ id }) => {
@@ -123,7 +123,7 @@ async function setupFlightEditorCollectionComponent(app: VcsUiApp): Promise<{
   app.categoryClassRegistry.registerClass(
     app.dynamicModuleId,
     FlightCategory.className,
-    FlightCategory as Ctor<typeof FlightCategory>,
+    FlightCategory,
   );
 
   const { collectionComponent } =
@@ -238,6 +238,7 @@ export type FlightPlugin = VcsPlugin<
   selectFlight(flightInstance: FlightInstance): void;
   clearSelection(): void;
 };
+
 /**
  * Implementation of VcsPlugin interface. This function should not throw! Put exceptions in initialize instead.
  * @returns {import("@vcmap/ui/src/vcsUiApp").VcsPlugin<T, PluginState>}

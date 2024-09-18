@@ -9,25 +9,23 @@ function sleep(ms = 0): Promise<void> {
   });
 }
 
-type TestPluginInstance = VcsPlugin<Record<never, never>, Record<never, never>>;
+type TestPluginInstance = VcsPlugin<object, object>;
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+// @ts-expect-error: not defined on global
 window.VcsPluginLoaderFunction = (
   name: string,
   module: string,
 ): {
   default: () => TestPluginInstance;
 } => ({
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
+  // @ts-expect-error: interface may not use this
   default: () => plugin({ name }, module),
 });
 
 const testPropSymbol = Symbol('testProp');
 
 describe('VcsPlugin Interface test', () => {
-  let pluginInstance: TestPluginInstance | null;
+  let pluginInstance: TestPluginInstance;
 
   beforeAll(async () => {
     pluginInstance = await loadPlugin(packageJSON.name, {
@@ -100,13 +98,11 @@ describe('VcsPlugin Interface test', () => {
 
   describe('shadowing a plugin', () => {
     let app: VcsUiApp;
-    let pluginInstance2:
-      | (TestPluginInstance & { [testPropSymbol]?: string })
-      | null;
+    let pluginInstance2: TestPluginInstance & { [testPropSymbol]?: string };
 
     beforeAll(async () => {
       app = new VcsUiApp();
-      app.plugins.add(pluginInstance!);
+      app.plugins.add(pluginInstance);
       pluginInstance2 = await loadPlugin(packageJSON.name, {
         name: packageJSON.name,
         version: '2.0.0',
@@ -122,8 +118,8 @@ describe('VcsPlugin Interface test', () => {
     });
 
     it('should override the plugin correctly', () => {
-      expect(() => app.plugins.override(pluginInstance2!)).to.not.throw;
-      app.plugins.override(pluginInstance2!);
+      expect(() => app.plugins.override(pluginInstance2)).to.not.throw;
+      app.plugins.override(pluginInstance2);
       expect(app.plugins.getByKey(packageJSON.name)).to.have.property(
         testPropSymbol,
         'test',
@@ -132,8 +128,8 @@ describe('VcsPlugin Interface test', () => {
     });
 
     it('should reincarnate the plugin correctly', async () => {
-      expect(() => app.plugins.remove(pluginInstance2!)).to.not.throw;
-      app.plugins.remove(pluginInstance2!);
+      expect(() => app.plugins.remove(pluginInstance2)).to.not.throw;
+      app.plugins.remove(pluginInstance2);
       await sleep(0);
       expect(app.plugins.getByKey(packageJSON.name)).not.to.have.property(
         testPropSymbol,

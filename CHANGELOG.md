@@ -1,3 +1,7 @@
+# v2.0.0
+
+- Updated to Map Version 6.0
+
 # v1.1.0
 
 - Moved flight import, export, zoom and player actions to @vcmap/ui
