@@ -6,6 +6,7 @@
       hide-name
       hide-title
     />
+    <v-divider class="mt-3" />
     <div class="d-flex w-full justify-space-between px-2 pt-2 pb-1">
       <VcsFormButton
         icon="$vcsComponentsPlus"
@@ -20,7 +21,7 @@
 </template>
 
 <script lang="ts">
-  import { VSheet } from 'vuetify/components';
+  import { VSheet, VDivider } from 'vuetify/components';
   import {
     provide,
     inject,
@@ -66,6 +67,7 @@
       VcsFormButton,
       VSheet,
       VcsFlightComponent,
+      VDivider,
     },
     props: {
       flightInstanceName: {
