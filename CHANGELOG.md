@@ -1,6 +1,6 @@
 # v2.0.0
 
-- Updated to Map Version 6.0
+- Updated @vcmap/core and @vcmap/ui to version 6.0
 
 # v1.1.0
 
