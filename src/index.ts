@@ -286,15 +286,15 @@ export default function flightPlugin(): FlightPlugin {
     i18n: {
       de: {
         flight: {
-          title: 'Kameraflüge',
-          titleTemporary: 'Temporärer Kameraflug',
+          title: 'Kameraflug erstellen',
+          titleTemporary: 'Temporären Kameraflug erstellen',
           new: 'Neu',
         },
       },
       en: {
         flight: {
-          title: 'Camera flights',
-          titleTemporary: 'Temporary camera flight',
+          title: 'Create camera flight',
+          titleTemporary: 'Create temporary camera flight',
           new: 'New',
         },
       },
