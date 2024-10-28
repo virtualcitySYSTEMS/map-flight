@@ -1,3 +1,7 @@
+# v2.0.1
+
+- Fixes MyWorkspace Category title
+
 # v2.0.0
 
 - Updated @vcmap/core and @vcmap/ui to version 6.0

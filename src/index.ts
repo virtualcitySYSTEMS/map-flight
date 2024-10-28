@@ -131,7 +131,7 @@ async function setupFlightEditorCollectionComponent(app: VcsUiApp): Promise<{
       {
         type: FlightCategory.className,
         name: 'flights',
-        title: 'flight.title',
+        title: 'flight.categoryTitle',
       },
       name,
       {
@@ -288,6 +288,7 @@ export default function flightPlugin(): FlightPlugin {
         flight: {
           title: 'Kameraflug erstellen',
           titleTemporary: 'Temporären Kameraflug erstellen',
+          categoryTitle: 'Kameraflüge',
           new: 'Neu',
         },
       },
@@ -295,6 +296,7 @@ export default function flightPlugin(): FlightPlugin {
         flight: {
           title: 'Create camera flight',
           titleTemporary: 'Create temporary camera flight',
+          categoryTitle: 'Camera flights',
           new: 'New',
         },
       },
