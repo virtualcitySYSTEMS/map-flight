@@ -1,4 +1,5 @@
-import { Category, FlightInstance, VcsApp } from '@vcmap/core';
+import type { FlightInstance, VcsApp } from '@vcmap/core';
+import { Category } from '@vcmap/core';
 
 class FlightCategory extends Category<FlightInstance> {
   static get className(): string {

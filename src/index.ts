@@ -1,16 +1,18 @@
-import {
+import type {
   CollectionComponentClass,
-  createZoomToFlightAction,
-  createExportFlightAction,
-  setupFlightListItemPlayer,
-  createSupportedMapMappingFunction,
   EditorCollectionComponentClass,
-  makeEditorCollectionComponentClass,
-  ToolboxType,
   VcsAction,
   VcsPlugin,
   VcsUiApp,
   WindowComponentOptions,
+} from '@vcmap/ui';
+import {
+  createZoomToFlightAction,
+  createExportFlightAction,
+  setupFlightListItemPlayer,
+  createSupportedMapMappingFunction,
+  makeEditorCollectionComponentClass,
+  ToolboxType,
   WindowSlot,
   importFlights,
   createListImportAction,
@@ -226,7 +228,9 @@ async function setupFlightEditorCollectionComponent(app: VcsUiApp): Promise<{
   return {
     collectionComponent: editorCollectionComponent,
     destroy(): void {
-      destroyFunctions.forEach((cb) => cb());
+      destroyFunctions.forEach((cb) => {
+        cb();
+      });
     },
   };
 }

@@ -22,6 +22,7 @@
 
 <script lang="ts">
   import { VSheet, VDivider } from 'vuetify/components';
+  import type { PropType, ShallowRef, Ref } from 'vue';
   import {
     provide,
     inject,
@@ -29,18 +30,11 @@
     shallowRef,
     nextTick,
     defineComponent,
-    PropType,
-    ShallowRef,
-    Ref,
     onUnmounted,
     watch,
   } from 'vue';
-  import {
-    VcsFlightComponent,
-    VcsFormButton,
-    VcsUiApp,
-    WindowState,
-  } from '@vcmap/ui';
+  import type { VcsUiApp, WindowState } from '@vcmap/ui';
+  import { VcsFlightComponent, VcsFormButton } from '@vcmap/ui';
   import { FlightInstance, moduleIdSymbol } from '@vcmap/core';
   import { name } from '../package.json';
   import type { FlightPlugin } from './index.js';
@@ -58,7 +52,11 @@
         isValid.value = instance.value.isValid();
       }),
     ];
-    return () => listener.forEach((cb) => cb());
+    return () => {
+      listener.forEach((cb) => {
+        cb();
+      });
+    };
   }
 
   export default defineComponent({
@@ -138,7 +136,9 @@
           const childWindowIds = app.windowManager.componentIds.filter((id) =>
             id.includes('edit-anchor'),
           );
-          childWindowIds.forEach((id) => app.windowManager.remove(id));
+          childWindowIds.forEach((id) => {
+            app.windowManager.remove(id);
+          });
           hasFlightInstance.value = false;
           await nextTick();
           flightInstance.value = new FlightInstance({});
