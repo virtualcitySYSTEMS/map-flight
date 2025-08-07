@@ -16,6 +16,8 @@ import {
   WindowSlot,
   importFlights,
   createListImportAction,
+  categoryManagerWindowId,
+  createFlightMovieActions,
 } from '@vcmap/ui';
 import {
   type FlightInstance,
@@ -39,7 +41,7 @@ function setupFlightButton(
 ): () => void {
   const windowComponent: WindowComponentOptions = {
     id: getFlightEditorWindowId(collectionComponent),
-    parentId: 'category-manager',
+    parentId: categoryManagerWindowId,
     component: FlightWindow,
     slot: WindowSlot.DYNAMIC_CHILD,
     state: {
@@ -160,7 +162,7 @@ async function setupFlightEditorCollectionComponent(app: VcsUiApp): Promise<{
         },
       }),
     },
-    'category-manager',
+    categoryManagerWindowId,
   );
 
   editorCollectionComponent.addItemMapping({
@@ -176,7 +178,7 @@ async function setupFlightEditorCollectionComponent(app: VcsUiApp): Promise<{
       (files) => importFlights(app, files, defaultDynamicModuleId),
       app.windowManager,
       name,
-      'category-manager',
+      categoryManagerWindowId,
     );
 
   destroyFunctions.push(importDestroy);
@@ -191,7 +193,15 @@ async function setupFlightEditorCollectionComponent(app: VcsUiApp): Promise<{
         createExportFlightAction(item);
       const { action: exportPathAction, destroy: exportPathDestroy } =
         createExportFlightAction(item, true);
-      listItem.actions.push(zoomAction, exportAction, exportPathAction);
+      const { actions: movieActions, destroy: movieDestroy } =
+        createFlightMovieActions(app, item);
+
+      listItem.actions.push(
+        zoomAction,
+        exportAction,
+        exportPathAction,
+        ...movieActions,
+      );
       const destroyPlayer = setupFlightListItemPlayer(
         app,
         item,
@@ -202,6 +212,7 @@ async function setupFlightEditorCollectionComponent(app: VcsUiApp): Promise<{
         zoomDestroy,
         exportDestroy,
         exportPathDestroy,
+        movieDestroy,
         destroyPlayer,
       );
       const { titleChanged } = listItem;

@@ -1,4 +1,9 @@
-# v2.0.1
+# v3.0.0
+
+- Updated @vcmap/ui and @vcmap/core to 6.2
+- Adds Export movie functions to MyWorkspace
+
+## v2.0.1
 
 - Fixes MyWorkspace Category title
 
