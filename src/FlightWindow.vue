@@ -1,27 +1,19 @@
 <template>
-  <v-sheet>
+  <VcsWorkspaceWrapper
+    :disable-add="currentIsPersisted || !isValid"
+    @new-clicked="newFlight"
+    @add-clicked="addToMyWorkspace"
+  >
     <VcsFlightComponent
       v-if="hasFlightInstance"
       :parent-id="parentId"
       hide-name
       hide-title
     />
-    <v-divider class="mt-3" />
-    <div class="d-flex w-full justify-space-between px-2 pt-2 pb-1">
-      <VcsFormButton
-        icon="$vcsComponentsPlus"
-        :disabled="currentIsPersisted || !isValid"
-        @click="addToMyWorkspace"
-      />
-      <VcsFormButton variant="filled" @click="newFlight">
-        {{ $t('flight.new') }}
-      </VcsFormButton>
-    </div>
-  </v-sheet>
+  </VcsWorkspaceWrapper>
 </template>
 
 <script lang="ts">
-  import { VSheet, VDivider } from 'vuetify/components';
   import type { PropType, ShallowRef, Ref } from 'vue';
   import {
     provide,
@@ -34,7 +26,7 @@
     watch,
   } from 'vue';
   import type { VcsUiApp, WindowState } from '@vcmap/ui';
-  import { VcsFlightComponent, VcsFormButton } from '@vcmap/ui';
+  import { VcsFlightComponent, VcsWorkspaceWrapper } from '@vcmap/ui';
   import { FlightInstance, moduleIdSymbol } from '@vcmap/core';
   import { name } from '../package.json';
   import type { FlightPlugin } from './index.js';
@@ -62,10 +54,8 @@
   export default defineComponent({
     name: 'FlightWindow',
     components: {
-      VcsFormButton,
-      VSheet,
+      VcsWorkspaceWrapper,
       VcsFlightComponent,
-      VDivider,
     },
     props: {
       flightInstanceName: {
